@@ -5,7 +5,7 @@ scala:
 - 2.13.1
 
 script:
-- sbt ++$TRAVIS_SCALA_VERSION test
+- sbt ++$TRAVIS_SCALA_VERSION test benchmarks/jmh:compile
 
 jdk:
 - openjdk8

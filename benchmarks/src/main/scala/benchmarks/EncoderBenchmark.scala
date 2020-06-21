@@ -10,7 +10,7 @@ import org.apache.avro.io.EncoderFactory
 import org.openjdk.jmh.annotations._
 import org.openjdk.jmh.infra.Blackhole
 
-object Encoding extends BenchmarkHelpers {
+object EncoderBenchmark extends BenchmarkHelpers {
 
   @State(Scope.Thread)
   class Setup {
@@ -42,9 +42,9 @@ object Encoding extends BenchmarkHelpers {
   }
 }
 
-class Encoding extends CommonParams with BenchmarkHelpers {
+class EncoderBenchmark extends CommonParams with BenchmarkHelpers {
 
-  import Encoding._
+  import EncoderBenchmark._
 
   def encode[T](value: T, encoder: Encoder[T], writer: GenericDatumWriter[GenericRecord]): ByteBuffer = {
     val outputStream = new ByteArrayOutputStream(512)
