@@ -25,12 +25,12 @@ class AvroBinaryInputStream[T](in: InputStream,
   private val datumReader = new GenericDatumReader[GenericRecord](writerSchema,  resolved.schema)
   private val avroDecoder = DecoderFactory.get().binaryDecoder(in, null)
 
-  private val _iter = new Iterator[GenericRecord] {
+  private val _iter = new Iterator[T] {
     var record: GenericRecord = null
     override def hasNext: Boolean = !avroDecoder.isEnd
-    override def next(): GenericRecord = {
+    override def next(): T = {
       record = datumReader.read(record, avroDecoder)
-      record
+      resolved.decode(record)
     }
   }
 
@@ -39,7 +39,7 @@ class AvroBinaryInputStream[T](in: InputStream,
     */
   override def iterator: Iterator[T] = new Iterator[T] {
     override def hasNext: Boolean = _iter.hasNext
-    override def next(): T = resolved.decode(_iter.next())
+    override def next(): T = _iter.next()
   }
 
   /**
@@ -48,7 +48,7 @@ class AvroBinaryInputStream[T](in: InputStream,
     */
   override def tryIterator: Iterator[Try[T]] = new Iterator[Try[T]] {
     override def hasNext: Boolean = _iter.hasNext
-    override def next(): Try[T] = Try(resolved.decode(_iter.next()))
+    override def next(): Try[T] = Try(_iter.next())
   }
 
   override def close(): Unit = in.close()
